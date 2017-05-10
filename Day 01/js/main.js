@@ -10,11 +10,6 @@ document.addEventListener("keydown", function(e) {
 	checkKey(keyPressed, "down");
 });
 
-// Add event listener for keyup
-document.addEventListener("keyup", function(e) {
-	var keyUnpressed = e.which || e.keyCode;
-	checkKey(keyUnpressed, "up");
-})
 
 function checkKey(keyPressed, direction) {	
 	for(var i = 0; i < keys.length; i++) {
@@ -22,23 +17,19 @@ function checkKey(keyPressed, direction) {
 		var dataKey = Number(keys[i].getAttribute("data-key"));
 
 		if(keyPressed === dataKey) {
-			if (direction === "down") {	
-				playSound(keyPressed);
-				addClass(keys[i], "playing");
-			} else if (direction === "up") {
-				removeClass(keys[i], "playing");
-			} else {
-				console.error("Incorrect parameter passed to function checkKey()")
-			}
+			playSound(keyPressed);
+			addClass(keys[i], "playing");
 		}
 	}
 }
-
 
 function playSound(soundKey) {
 	for(var i = 0; i < audioTags.length; i++) {
 		if (soundKey === Number(audioTags[i].getAttribute("data-key"))) {
 			audioTags[i].play();
+			audioTags[i].addEventListener("ended", function() {
+				//
+			});
 		}
 	}
 }

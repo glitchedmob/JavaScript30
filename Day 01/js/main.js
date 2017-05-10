@@ -4,41 +4,50 @@ var keys = document.getElementsByClassName("key");
 // Cache list of audio tags
 var audioTags = document.getElementsByTagName("audio");
 
-// Add event listener for keydown
-document.addEventListener("keydown", function(e) {
-	var keyPressed = e.which || e.keyCode;
-	checkKey(keyPressed, "down");
-});
+document.addEventListener("keydown", playAudio);
 
 
-function checkKey(keyPressed, direction) {	
-	for(var i = 0; i < keys.length; i++) {
+function playAudio(e) {
+	var keyPressed = e.witch || e.keyCode;
 
-		var dataKey = Number(keys[i].getAttribute("data-key"));
+	// Find audio tag and button
+	var button = document.querySelector("div[data-key='" + keyPressed + "'");
+	var audioTag = document.querySelector("audio[data-key='" + keyPressed + "'");
 
-		if(keyPressed === dataKey) {
-			playSound(keyPressed);
-			addClass(keys[i], "playing");
-		}
-	}
+	// Play corresponding audio file
+	audioTag.currentTime = 0;
+	audioTag.play();
+
+	addClass(button, "playing");
 }
 
-function playSound(soundKey) {
-	for(var i = 0; i < audioTags.length; i++) {
-		if (soundKey === Number(audioTags[i].getAttribute("data-key"))) {
-			audioTags[i].play();
-			audioTags[i].addEventListener("ended", function() {
-				//
-			});
-		}
-	}
+// Add audio ended event listeners for all audio tags
+for (var i = 0; i < audioTags.length; i++) {
+	audioTags[i].addEventListener("ended", audioEnded);
+}
+
+function audioEnded(e) {
+	var dataKey = e.currentTarget.getAttribute("data-key");
+	var button = document.querySelector("div[data-key='" + dataKey + "'");
+
+	removeClass(button, "playing")
 }
 
 function addClass(element, classToAdd) {
-	element.className += " " + classToAdd;
+	var reg = new RegExp('(\\s|^)' + classToAdd + '(\\s|$)');
+
+	// Checks that class isn't already added to element
+	if (!element.className.match(reg)){
+		element.className += " " + classToAdd;
+	}
 } 
 
 function removeClass(element, classToRemove) {
-	var reg = new RegExp('\b' + classToRemove + "\b");
-	element.className.replace(reg, '');
+	var reg = new RegExp('(\\s|^)' + classToRemove + '(\\s|$)');
+
+	// Checks that class is added to element before removing
+	if (element.className.match(reg)) {
+		element.className = element.className.replace(reg, '');
+	}
+	
 } 

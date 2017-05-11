@@ -1,6 +1,3 @@
-// Cache list of keys
-var keys = document.getElementsByClassName("key");
-
 // Cache list of audio tags
 var audioTags = document.getElementsByTagName("audio");
 
